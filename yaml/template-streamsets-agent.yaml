@@ -1,0 +1,135 @@
+###
+###   STREAMSETS-AGENT YAML
+###
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: pipelinedeployments.streamsets.com
+spec:
+  group: streamsets.com
+  names:
+    kind: PipelineDeployment
+    listKind: PipelineDeploymentList
+    plural: pipelinedeployments
+    singular: pipelinedeployment
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+        status:
+          type: object
+  version: v1alpha1
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: previewerdeployments.streamsets.com
+spec:
+  group: streamsets.com
+  names:
+    kind: PreviewerDeployment
+    listKind: PreviewerDeploymentList
+    plural: previewerdeployments
+    singular: previewerdeployment
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+        status:
+          type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: launcher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: launcher
+  template:
+    metadata:
+      labels:
+        name: launcher
+    spec:
+      volumes:
+        - name: launcher-conf
+          configMap:
+            defaultMode: 0777
+            name: launcher-conf
+      serviceAccountName: streamsets-agent
+      imagePullSecrets:
+       - name: dockercred
+      containers:
+        - name: launcher
+          image: streamsets/launcher:1.0.0-SNAPSHOT
+          volumeMounts:
+            - name: launcher-conf
+              mountPath: /opt/streamsets/launcher/etc/launcher.conf
+              readOnly: false
+              subPath: launcher.conf
+          ports:
+          - containerPort: 18640
+            name: ui
+          command:
+          - launcher
+          - "-debug"
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 18640
+          readinessProbe:
+            exec:
+              command:
+                - stat
+                - /tmp/operator-sdk-ready
+            initialDelaySeconds: 4
+            periodSeconds: 10
+            failureThreshold: 1
+          env:
+            - name: image.pull.secrets
+              value: dockercred
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "streamsets-launcher-operator"
+---

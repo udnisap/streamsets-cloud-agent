@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: extralib
+  labels:
+    type: extralib
+spec:
+  claimRef:
+    namespace: default
+    name: extralib
+  accessModes:
+    - ReadOnlyMany
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /tmp/extralib
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: extralib
+  labels:
+    type: executor
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 10Gi
+---
