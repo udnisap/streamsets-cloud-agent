@@ -152,11 +152,8 @@ fi
 
 kubectl create -f yaml/streamsets-agent-service.yaml -n $NS
 
-# User input
+# Create config
 source update-conf.sh
-
-# create docker secret
-kubectl create secret docker-registry dockercred --docker-server=docker.io --docker-username=$DOCKER_USER_NAME --docker-password=$DOCKER_PASSWORD --docker-email=$DOCKER_EMAIL -n $NS
 
 echo $PATH_MOUNT
 

@@ -21,20 +21,6 @@ function initIngressUrl() {
   [[ -z "$INGRESS_URL" ]] && [[ $INSTALL_TYPE == "LINUX_VM" ]] && INGRESS_URL="https://$PUBLICIP:$INGRESS_NODE_PORT/agent"
 }
 
-[[ -z "$DOCKER_USER_NAME" ]] && read -p "Enter your Docker username for hub.docker.com (DOCKER_USER_NAME):" DOCKER_USER_NAME
-[[ -z "$DOCKER_USER_NAME" ]] && echo "Must have Docker username" && exit 1
-
-[[ -z "$DOCKER_PASSWORD" ]] && read -s -p "Enter your Docker password (DOCKER_PASSWORD):" DOCKER_PASSWORD
-echo ""
-[[ -z "$DOCKER_PASSWORD" ]] && echo "Must have Docker password" && exit 1
-
-[[ -z "$DOCKER_EMAIL" ]] && read -p "Enter the email associated with the Docker username ${DOCKER_USER_NAME} (DOCKER_EMAIL):" DOCKER_EMAIL
-[[ -z "$DOCKER_EMAIL" ]] && echo "Must enter the email associated with Docker username ${DOCKER_USER_NAME}" && exit 1
-
-DOCKER_LOGIN_STATUS=$(curl -o /dev/null -s -w "%{http_code}\n" -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USER_NAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login)
-[[ $DOCKER_LOGIN_STATUS != "200" ]] && echo "Failed to authenticate with Docker :(" &&  exit 1
-
-
 [[ $INSTALL_TYPE == "MINIKUBE" ]] && PUBLICIP=$(minikube ip)
 [[ $INSTALL_TYPE == "DOCKER" ]] && PUBLICIP="localhost"
 
