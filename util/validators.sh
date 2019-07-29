@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Copyright 2019 Streamsets Inc.
 
 function validate_command() {
   # Call using command to validate and where to get it if not installed (optional)

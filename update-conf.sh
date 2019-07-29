@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Copyright 2019 Streamsets Inc.
 set +e
 
 source util/validators.sh

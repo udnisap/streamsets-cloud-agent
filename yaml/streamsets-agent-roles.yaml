@@ -1,3 +1,4 @@
+# Copyright 2019 Streamsets Inc.
 ---
 apiVersion: v1
 kind: ServiceAccount

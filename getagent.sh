@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Copyright 2019 Streamsets Inc.
 
 if [[ -d "streamsets-cloud-agent" ]]; then
   echo "Please remove the existing streamsets-cloud-agent directory and try again"

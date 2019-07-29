@@ -1,3 +1,4 @@
+# Copyright 2019 Streamsets Inc.
 bash -c "$(curl -sSL https://controlagent.streamsets.net/getagent.sh)"
 
 bash -c "$(curl -sSL https://controlagent.streamsets.net/delagent.sh)"

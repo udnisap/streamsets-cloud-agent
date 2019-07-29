@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Copyright 2019 Streamsets Inc.
 
 if [[ $# -eq 0 ]]; then
   NS="default"

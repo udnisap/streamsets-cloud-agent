@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Copyright 2019 Streamsets Inc.
 
 function usage() {
   echo "Usage: ./getagent.sh --install-type [INSTALL_TYPE] --agent-id [AGENT_ID] --credentials [CREDENTIALS] --environment-id [ENVIRONMENT_ID] --streamsets-cloud-url [STREAMSETS_CLOUD_URL] [OPTION]..."

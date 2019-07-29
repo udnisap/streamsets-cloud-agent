@@ -1,3 +1,4 @@
+# Copyright 2019 Streamsets Inc.
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
