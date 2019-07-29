@@ -17,7 +17,6 @@ INGRESS_NAME=$(kubectl get ingress | grep -i "agent-ingress")
 INGRESS_TYPE=$(echo $INGRESS_NAME  | awk '{print $1}' | awk -F "-" '{print $1}')
 
 kubectl delete configmap launcher-conf -n $NS
-kubectl delete secret dockercred -n $NS
 kubectl delete secret agenttls -n $NS
 
 kubectl delete -f yaml/streamsets-agent-service.yaml -n $NS
