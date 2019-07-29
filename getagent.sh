@@ -7,7 +7,7 @@ if [[ -d "streamsets-cloud-agent" ]]; then
 fi
 mkdir streamsets-cloud-agent && cd streamsets-cloud-agent
 
-readonly SCRIPT_URL=https://agent.streamsetscloud.com
+readonly SCRIPT_URL=https://raw.githubusercontent.com/streamsets/streamsets-cloud-agent/master
 
 # Download script files
 curl -O "$SCRIPT_URL"/agent_commands.sh
