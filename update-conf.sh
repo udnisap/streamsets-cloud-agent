@@ -45,7 +45,7 @@ if [[ -z "$AGENT_CRT" ]] && [[ -z "$AGENT_KEY" ]]; then
 
 fi
 
-kubectl create secret tls agenttls --key $AGENT_KEY --cert $AGENT_CRT
+kubectl create secret tls agenttls --key $AGENT_KEY --cert $AGENT_CRT -n $NS
 
 [[ $INSTALL_TYPE == "LINUX_VM" ]] || [[ $INSTALL_TYPE == "DOCKER" ]] && kubectl apply -f yaml/metric-server.yaml && kubectl apply -f yaml/nginx_ingress.yaml -n $NS
 
