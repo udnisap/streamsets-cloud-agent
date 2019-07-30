@@ -113,6 +113,14 @@ if [[ "$PATH_MOUNT" && $INSTALL_TYPE != "LINUX_VM" ]]; then
   exit 1
 fi
 
+function printN() {
+  for i in `seq $1`
+  do
+    printf '*'
+  done
+  printf '\n'
+}
+
 # Get the directory the script is from
 SCRIPT_DIR="$(dirname "$(readlink "$0")")"
 
@@ -182,10 +190,15 @@ until [[ "$(kubectl get pods -n $NS 2> /dev/null | grep launcher | awk '{print $
   sleep 1
 done
 
+AGENT_RUNNING_MESSAGE="Agent is running at: $INGRESS_URL"
+[[  $SHOULD_ACCEPT_SELF_SIGNED == 1 ]] && CERTIFICATE_MESSAGE="Go to $INGRESS_URL in the browser and accept the self-signed certificate."
+[[  $SHOULD_ACCEPT_SELF_SIGNED == 1 ]] && COLS=${#CERTIFICATE_MESSAGE} || COLS=${#AGENT_RUNNING_MESSAGE}
+((COLS+=10))
+
 echo ""
-echo -e "\e[32m+---------------------------------------------------------+"
-echo -e "\e[2m-----------------------------------------------------------"
-echo -e "\e[0m\e[39mAgent is running at: \e[32m$INGRESS_URL"
-[[  $SHOULD_ACCEPT_SELF_SIGNED == 1 ]] && echo -e "\e[33mGo to \e[32m$INGRESS_URL \e[33min the browser and accept the self-signed certificate."
-echo -e "\e[2m\e[32m-----------------------------------------------------------"
-echo -e "\e[0m\e[32m+---------------------------------------------------------+"
+printN $COLS
+echo ""
+echo "     $AGENT_RUNNING_MESSAGE"
+echo "     $CERTIFICATE_MESSAGE"
+echo ""
+printN $COLS
