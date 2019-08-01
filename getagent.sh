@@ -10,33 +10,33 @@ mkdir streamsets-cloud-agent && cd streamsets-cloud-agent
 readonly SCRIPT_URL=https://raw.githubusercontent.com/streamsets/streamsets-cloud-agent/master
 
 # Download script files
-curl -O "$SCRIPT_URL"/agent_commands.sh
-curl -O "$SCRIPT_URL"/delagent.sh
-curl -O "$SCRIPT_URL"/previewer-crd.yaml
-curl -O "$SCRIPT_URL"/template-fetcher.conf
-curl -O "$SCRIPT_URL"/template-launcher.conf
-curl -O "$SCRIPT_URL"/update-conf.sh
+curl -O -s "$SCRIPT_URL"/agent_commands.sh
+curl -O -s "$SCRIPT_URL"/delagent.sh
+curl -O -s "$SCRIPT_URL"/previewer-crd.yaml
+curl -O -s "$SCRIPT_URL"/template-fetcher.conf
+curl -O -s "$SCRIPT_URL"/template-launcher.conf
+curl -O -s "$SCRIPT_URL"/update-conf.sh
 
 mkdir yaml && cd yaml
 
-curl -O "$SCRIPT_URL"/yaml/aks_ingress.yaml
-curl -O "$SCRIPT_URL"/yaml/gke_ingress.yaml
-curl -O "$SCRIPT_URL"/yaml/metric-server.yaml
-curl -O "$SCRIPT_URL"/yaml/minikube_ingress.yaml
-curl -O "$SCRIPT_URL"/yaml/nginx_ingress.yaml
-curl -O "$SCRIPT_URL"/yaml/pv-extrta-lib.yaml
-curl -O "$SCRIPT_URL"/yaml/pv-gpd.yaml
-curl -O "$SCRIPT_URL"/yaml/pv-hostpath.yaml
-curl -O "$SCRIPT_URL"/yaml/pvc-test.yaml
-curl -O "$SCRIPT_URL"/yaml/streamsets-agent-roles.yaml
-curl -O "$SCRIPT_URL"/yaml/streamsets-agent-service.yaml
-curl -O "$SCRIPT_URL"/yaml/template-pv-dir-mount.yaml
-curl -O "$SCRIPT_URL"/yaml/template-streamsets-agent.yaml
+curl -O -s "$SCRIPT_URL"/yaml/aks_ingress.yaml
+curl -O -s "$SCRIPT_URL"/yaml/gke_ingress.yaml
+curl -O -s "$SCRIPT_URL"/yaml/metric-server.yaml
+curl -O -s "$SCRIPT_URL"/yaml/minikube_ingress.yaml
+curl -O -s "$SCRIPT_URL"/yaml/nginx_ingress.yaml
+curl -O -s "$SCRIPT_URL"/yaml/pv-extrta-lib.yaml
+curl -O -s "$SCRIPT_URL"/yaml/pv-gpd.yaml
+curl -O -s "$SCRIPT_URL"/yaml/pv-hostpath.yaml
+curl -O -s "$SCRIPT_URL"/yaml/pvc-test.yaml
+curl -O -s "$SCRIPT_URL"/yaml/streamsets-agent-roles.yaml
+curl -O -s "$SCRIPT_URL"/yaml/streamsets-agent-service.yaml
+curl -O -s "$SCRIPT_URL"/yaml/template-pv-dir-mount.yaml
+curl -O -s "$SCRIPT_URL"/yaml/template-streamsets-agent.yaml
 
 cd .. && mkdir util && cd util
 
-curl -O "$SCRIPT_URL"/util/validators.sh
-curl -O "$SCRIPT_URL"/util/usage.sh
+curl -O -s "$SCRIPT_URL"/util/validators.sh
+curl -O -s "$SCRIPT_URL"/util/usage.sh
 
 cd ..
 
