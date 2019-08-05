@@ -51,14 +51,20 @@ source util/validators.sh # utilities for validating files, commands etc as pre-
 
 source util/usage.sh # Usage in file to improve readability
 
+function cleanup() {
+  rm -rf $HOME/.streamsets/cloudenv/tmp
+}
+
 # Check that the arguments either begin with -h, all needed args are set as env variables, or all args are present
 if [[ $# -gt 0 && "$1" == "-h" ]]; then
   usage
+  cleanup
   exit 0
 elif [[ $# -ge 10 ]]; then
-  while [[ ! -z "$1" ]]; do
-    if [[ !("$2") ]]; then
+  while [[ -n "$1" ]]; do
+    if [[ -z "$2" ]]; then
       usage
+      cleanup
       exit 1
     fi
     case "$1" in
@@ -101,26 +107,31 @@ elif [[ $# -ge 10 ]]; then
   done
 fi
 
-if [[ !("$AGENT_ID" && "$AGENT_CREDENTIALS" && "$ENV_ID" && "$STREAMSETS_CLOUD_URL" && "$INSTALL_TYPE") ]]; then
+if [[ -z "$AGENT_ID" || -z "$AGENT_CREDENTIALS" || -z "$ENV_ID" || -z "$STREAMSETS_CLOUD_URL" || -z "$INSTALL_TYPE" ]]; then
   incorrectUsage
   usage
+  cleanup
   exit 1
 fi
-if [[ $INSTALL_TYPE == "LINUX_VM" && !("$PUBLICIP") ]]; then
+if [[ $INSTALL_TYPE == "LINUX_VM" && -z "$PUBLICIP" ]]; then
   incorrectUsage
   usage
+  cleanup
   exit 1
 fi
-if [[ (("$AGENT_KEY") && !("$AGENT_CRT")) || (!("$AGENT_KEY") && ("$AGENT_CRT")) ]]; then
+if [[ ( -n "$AGENT_KEY" && -z "$AGENT_CRT") || ( -z "$AGENT_KEY" && -n "$AGENT_CRT") ]]; then
   echo "Missing agent key or certificate"
+  cleanup
   exit 1
 fi
-if [[ "$PATH_MOUNT" && $INSTALL_TYPE != "LINUX_VM" ]]; then
+if [[ -n "$PATH_MOUNT" && $INSTALL_TYPE != "LINUX_VM" ]]; then
   echo "Directory to mount specified on an install type which does not support mounted directories"
+  cleanup
   exit 1
 fi
 
 mv $HOME/.streamsets/cloudenv/tmp $HOME/.streamsets/cloudenv/$ENV_ID
+chmod u+x delagent.sh
 
 function printN() {
   for i in `seq $1`
@@ -194,7 +205,7 @@ fi
 i=1
 sp="/-\|"
 echo -n "$WAIT_MESSAGE"
-until [[ "$(kubectl get pods -n $NS 2> /dev/null | grep launcher | awk '{print $3}')" = "Running" && "$(kubectl get pods -n $NS 2> /dev/null | grep launcher | awk '{print $2}')" = "1/1" && "$(curl -LI -k -XGET $INGRESS_URL -o /dev/null -w '%{http_code}\n' -s)" = "200" ]] ; do
+until kubectl get pods -n "$NS" -l app=launcher --field-selector=status.phase=Running 2> /dev/null && curl -Lf -k "$INGRESS_URL" -o /dev/null 2> /dev/null; do
   printf "\b${sp:i++%${#sp}:1}"
   sleep 1
 done
