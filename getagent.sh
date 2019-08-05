@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 # Copyright 2019 Streamsets Inc.
 
-if [[ -d "streamsets-cloud-agent" ]]; then
-  echo "Please remove the existing streamsets-cloud-agent directory and try again"
-  exit 1
+cd ~
+if [[ ! -d ".streamsets" ]]; then
+  mkdir .streamsets
 fi
-mkdir streamsets-cloud-agent && cd streamsets-cloud-agent
+cd .streamsets
+
+if [[ ! -d "cloudenv" ]]; then
+  mkdir cloudenv
+fi
+cd cloudenv
+
+mkdir tmp && cd tmp
 
 readonly SCRIPT_URL=https://raw.githubusercontent.com/streamsets/streamsets-cloud-agent/master
 
@@ -112,6 +119,8 @@ if [[ "$PATH_MOUNT" && $INSTALL_TYPE != "LINUX_VM" ]]; then
   echo "Directory to mount specified on an install type which does not support mounted directories"
   exit 1
 fi
+
+mv $HOME/.streamsets/cloudenv/tmp $HOME/.streamsets/cloudenv/$ENV_ID
 
 function printN() {
   for i in `seq $1`
