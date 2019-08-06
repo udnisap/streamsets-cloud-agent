@@ -130,6 +130,11 @@ if [[ -n "$PATH_MOUNT" && $INSTALL_TYPE != "LINUX_VM" ]]; then
   exit 1
 fi
 
+if [[ -d $HOME/.streamsets/cloudenv/$ENV_ID ]]; then
+  echo "Error: installation already exists for environment with this ID"
+  cleanup
+  exit 1
+fi
 mv $HOME/.streamsets/cloudenv/tmp $HOME/.streamsets/cloudenv/$ENV_ID
 chmod u+x delagent.sh
 
@@ -158,6 +163,17 @@ if [[ -z $(which uuidgen) ]]; then
 fi
 
 NS=${NS:-default}
+
+# Check for resources left from previous runs of this script
+if [[ -n $(kubectl get deployments -n "$NS" --field-selector=metadata.name=launcher 2> /dev/null) || \
+      -n $(kubectl get ingress -n "$NS" 2> /dev/null | grep agent-ingress) || \
+      -n $(kubectl get configmaps -n "$NS" --field-selector=metadata.name=launcher-conf 2> /dev/null) || \
+      -n $(kubectl get svc -n "$NS" --field-selector=metadata.name=streamsets-agent 2> /dev/null) ]]; then
+  echo "Agent resources found in this namespace."
+  echo "Either delete these resources by running delagent.sh or specify a different namespace (under Advanced options in the Install Agent screen) and retry to continue."
+  rm -rf $HOME/.streamsets/cloudenv/$ENV_ID
+  exit 1
+fi
 
 # Install Kubernetes and its dependencies
 if [[ $INSTALL_TYPE == "LINUX_VM" ]]; then
