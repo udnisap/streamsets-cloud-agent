@@ -199,9 +199,8 @@ kubectl create -f yaml/streamsets-agent-service.yaml -n $NS
 # Create config
 source update-conf.sh
 
-echo $PATH_MOUNT
 
-[[ ! -z "$PATH_MOUNT" ]] && kubectl create -f yaml/pv-dir-mount.yaml
+[[ ! -z "$PATH_MOUNT" ]] && kubectl create -f yaml/pv-dir-mount.yaml -n $NS
 
 # Deploy the configuration for the operator
 kubectl create configmap launcher-conf --from-file=launcher.conf -n $NS
