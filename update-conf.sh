@@ -82,6 +82,7 @@ sed $BACKUP_EXT "s|agent-credentials =.*|agent-credentials =\"${AGENT_CREDENTIAL
 sed $BACKUP_EXT "s|agent-id =.*|agent-id =\"${AGENT_ID}\"|" launcher.conf
 sed $BACKUP_EXT "s|environment-id =.*|environment-id =\"${ENV_ID}\"|" launcher.conf
 [[ ! -z "$PATH_MOUNT" ]] && sed $BACKUP_EXT "s|default-pvc-to-mount =.*|default-pvc-to-mount =\"dirmount\"|" launcher.conf
+[[ ! -z "$PATH_MOUNT" ]] && sed $BACKUP_EXT "s|default-pvc-path-to-mount =.*|default-pvc-path-to-mount =\"$PATH_MOUNT\"|" launcher.conf
 
 ####
 ####   FETCHER.CONF
