@@ -84,6 +84,7 @@ spec:
     metadata:
       labels:
         name: launcher
+        app: launcher
     spec:
       volumes:
         - name: launcher-conf

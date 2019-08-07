@@ -220,7 +220,7 @@ fi
 i=1
 sp="/-\|"
 echo -n "$WAIT_MESSAGE"
-until kubectl get pods -n "$NS" -l app=launcher --field-selector=status.phase=Running 2> /dev/null && curl -Lf -k "$INGRESS_URL" -o /dev/null 2> /dev/null; do
+until [[ $(kubectl get pods -n "$NS" -l app=launcher --field-selector=status.phase=Running 2> /dev/null) ]] && curl -Lf -k "$INGRESS_URL" -o /dev/null 2> /dev/null; do
   printf "\b${sp:i++%${#sp}:1}"
   sleep 1
 done
