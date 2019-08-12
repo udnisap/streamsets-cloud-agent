@@ -8,16 +8,14 @@ function initIngressUrl() {
   if [[ -z "$INGRESS_URL" ]]; then
    while [[ -z $PUBLICIP ]]; do
     echo "Waiting for Agent Ingress to start. This may take several minutes..."
-    [[ $INSTALL_TYPE == "AKS" ]] && PUBLICIP=$(kubectl get ingress aks-agent-ingress -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-    [[ $INSTALL_TYPE == "GKE" ]] && PUBLICIP=$(kubectl get ingress gke-agent-ingress -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+    [[ $INSTALL_TYPE == "GKE" ]] || [[ $INSTALL_TYPE == "AKS" ]] && PUBLICIP=$(kubectl get ingress nginx-agent-ingress -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
     [[ $INSTALL_TYPE == "LINUX_VM" ]] && PUBLICIP=$(kubectl describe svc traefik --namespace kube-system | grep Ingress | awk '{print $3}')
     sleep 10
    done
    [[ $INSTALL_TYPE == "LINUX_VM" ]] && INGRESS_NODE_PORT=$(kubectl -n ingress-nginx get svc ingress-nginx -o=jsonpath='{.spec.ports[1].nodePort}')
   fi
-  [[ -z "$INGRESS_URL" ]] && [[ $INSTALL_TYPE == "DOCKER" ]] || [[ $INSTALL_TYPE == "MINIKUBE" ]] && INGRESS_URL="https://$PUBLICIP/agent"
-  [[ -z "$INGRESS_URL" ]] && [[ $INSTALL_TYPE == "GKE" ]] && INGRESS_URL="https://$PUBLICIP"
-  [[ -z "$INGRESS_URL" ]] && [[ $INSTALL_TYPE == "AKS" ]] && INGRESS_URL="https://$PUBLICIP"
+
+  [[ -z "$INGRESS_URL" ]] && INGRESS_URL="https://$PUBLICIP/agent"
   [[ -z "$INGRESS_URL" ]] && [[ $INSTALL_TYPE == "LINUX_VM" ]] && INGRESS_URL="https://$PUBLICIP:$INGRESS_NODE_PORT/agent"
 }
 
@@ -47,12 +45,7 @@ fi
 
 kubectl create secret tls agenttls --key $AGENT_KEY --cert $AGENT_CRT -n $NS
 
-[[ $INSTALL_TYPE == "LINUX_VM" ]] || [[ $INSTALL_TYPE == "DOCKER" ]] && kubectl apply -f yaml/metric-server.yaml && kubectl apply -f yaml/nginx_ingress.yaml -n $NS
-
-[[ $INSTALL_TYPE == "MINIKUBE" ]] &&  kubectl apply -f yaml/metric-server.yaml && kubectl apply -f yaml/minikube_ingress.yaml -n $NS
-
-[[ $INSTALL_TYPE == "GKE" ]] && kubectl apply -f yaml/gke_ingress.yaml -n $NS
-[[ $INSTALL_TYPE == "AKS" ]] && kubectl apply -f yaml/aks_ingress.yaml -n $NS
+kubectl apply -f yaml/metric-server.yaml && kubectl apply -f yaml/nginx_ingress.yaml -n $NS
 
 initIngressUrl
 

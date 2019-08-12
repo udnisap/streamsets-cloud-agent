@@ -26,10 +26,7 @@ curl -O -s "$SCRIPT_URL"/update-conf.sh
 
 mkdir yaml && cd yaml
 
-curl -O -s "$SCRIPT_URL"/yaml/aks_ingress.yaml
-curl -O -s "$SCRIPT_URL"/yaml/gke_ingress.yaml
 curl -O -s "$SCRIPT_URL"/yaml/metric-server.yaml
-curl -O -s "$SCRIPT_URL"/yaml/minikube_ingress.yaml
 curl -O -s "$SCRIPT_URL"/yaml/nginx_ingress.yaml
 curl -O -s "$SCRIPT_URL"/yaml/pv-extrta-lib.yaml
 curl -O -s "$SCRIPT_URL"/yaml/pv-gpd.yaml
@@ -186,9 +183,9 @@ if [[ $INSTALL_TYPE == "LINUX_VM" ]]; then
   done
 fi
 
-[[ $INSTALL_TYPE == "LINUX_VM" ]] || [[ $INSTALL_TYPE == "DOCKER" ]] || [[ $INSTALL_TYPE == "AKS" ]] && kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.24.1/deploy/mandatory.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.24.1/deploy/mandatory.yaml
 
-[[ $INSTALL_TYPE == "LINUX_VM" ]] || [[ $INSTALL_TYPE == "DOCKER" ]] || [[ $INSTALL_TYPE == "AKS" ]] && kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.24.1/deploy/provider/cloud-generic.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.24.1/deploy/provider/cloud-generic.yaml
 
 #[[ $INSTALL_TYPE == "DOCKER" ]] &&  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.24.1/deploy/provider/baremetal/service-nodeport.yaml
 

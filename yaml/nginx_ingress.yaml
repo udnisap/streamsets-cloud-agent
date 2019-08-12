@@ -7,6 +7,11 @@ metadata:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.org/ssl-services: streamsets-agent
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "HEAD, OPTIONS, GET, POST, PUT, DELETE"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "authorization,content-type,runid,runtype,x-requested-by,x-ss-rest-call"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
 spec:
   tls:
     - secretName: agenttls
